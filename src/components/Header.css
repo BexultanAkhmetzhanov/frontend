@@ -1,0 +1,42 @@
+ .app-header {
+  background-color: var(--card-background);
+  padding: 15px 30px;
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.5em;
+  font-weight: 700;
+}
+
+.location-display {
+  display: flex;
+  align-items: center;
+  gap: 15px;  
+}
+
+.change-city-btn {
+  padding: 8px 15px;
+  font-size: 0.9em;
+  font-weight: 500;
+  border: 1px solid var(--border-color);
+  background-color: transparent;
+  color: var(--accent-color);
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all 0.2s ease-in-out;
+}
+
+.change-city-btn:hover {
+  background-color: var(--accent-color);
+  color: white;
+}
