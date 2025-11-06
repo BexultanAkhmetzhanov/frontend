@@ -32,6 +32,8 @@
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   display: flex;
   flex-direction: column;
+  max-width: 450px; /* Максимальная ширина, чтобы не растягиваться до 1200px */
+  margin: 0 auto;
 }
 
 .promotion-card:hover {
