@@ -21,6 +21,9 @@ function AdminDashboard() {
             <Link to="/admin/moderation">Модерация акций</Link>
           </li>
           <li>
+            <Link to="/admin/published">Опубликованные акции</Link>
+          </li>
+          <li>
             <Link to="/admin/parsing">Управление парсингом</Link>
           </li>
           <li>

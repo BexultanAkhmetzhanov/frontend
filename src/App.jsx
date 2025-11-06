@@ -9,6 +9,7 @@ import AdminModerationPage from './pages/AdminModerationPage';
 import AdminPromoEditPage from './pages/AdminPromoEditPage';
 import AdminParsingPage from './pages/AdminParsingPage';
 import AdminSettingsPage from './pages/AdminSettingsPage'; // <-- Импорт новой страницы
+import AdminPublishedPage from './pages/AdminPublishedPage';
 
 function App() {
   return (
@@ -40,7 +41,12 @@ function App() {
           path="/admin/settings" 
           element={ <ProtectedRoute><AdminSettingsPage /></ProtectedRoute> } 
         />
+        <Route 
+          path="/admin/published" 
+          element={ <ProtectedRoute><AdminPublishedPage /></ProtectedRoute> } 
+        />
       </Routes>
+      
     </Router>
   );
 }

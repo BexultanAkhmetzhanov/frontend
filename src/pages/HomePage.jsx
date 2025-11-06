@@ -133,25 +133,34 @@ function HomePage() {
 
   // --- ✅ НОВАЯ ЛОГИКА: ФИЛЬТРАЦИЯ АКЦИЙ НА КЛИЕНТЕ ---
   const filteredPromotions = useMemo(() => {
-    // Начинаем с полного списка акций для города
+    // Начинаем с полного списка
     let promos = promotions;
 
-    // 1. Фильтруем по ГЛАВНОЙ категории
-    if (selectedCategory) {
-      // Убедимся, что данные с бэка приходят в нужном виде
-      promos = promos.filter(promo => 
-        promo.establishment.subcategory?.category_id === selectedCategory.id
-      );
-    }
-    
-    // 2. Фильтруем по ПОДкатегории
+    // 1. Если выбрана КОНКРЕТНАЯ подкатегория (например, "FastFood")
     if (selectedSubcategory) {
-      promos = promos.filter(promo => 
+      // Нам нужен ТОЛЬКО этот фильтр.
+      return promos.filter(promo => 
         promo.establishment.subcategory?.id === selectedSubcategory.id
       );
     }
+    
+    // 2. Если выбрана только ГЛАВНАЯ категория (например, "Food", а в "таблетках" выбрано "Все")
+    if (selectedCategory) {
+      // Мы не можем фильтровать по ID категории, так как у нас его нет.
+      // НО мы можем отфильтровать по СПИСКУ подкатегорий, которые принадлежат этой категории.
+      
+      // 1. Получаем ID всех подкатегорий (например, [5, 6, 7] для "Food")
+      const subcategoryIds = selectedCategory.subcategories.map(sub => sub.id);
+      
+      // 2. Фильтруем акции: "Покажи, если subcategory.id акции есть в этом списке"
+      return promos.filter(promo =>
+        subcategoryIds.includes(promo.establishment.subcategory?.id)
+      );
+    }
 
-    return promos;
+    // 3. Если не выбрано НИЧЕГО (ни категории, ни подкатегории)
+    return promos; // Показываем все
+    
   }, [promotions, selectedCategory, selectedSubcategory]); // <-- Пересчет при смене
 
 

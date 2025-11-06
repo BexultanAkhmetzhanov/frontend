@@ -1,33 +1,52 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link, useLocation } from 'react-router-dom';
 import apiClient from '../api';
 import '../App.css';
 
 const API_BASE_URL = 'https://ig-parser-backend.onrender.com';
-//const API_BASE_URL = 'http://127.0.0.1:8000';
+// const API_BASE_URL = 'http://127.0.0.1:8000';
 function AdminPromoEditPage() {
   const [promo, setPromo] = useState(null);
   const [editedText, setEditedText] = useState('');
   const [conditions, setConditions] = useState('');
+
+  const [allEstablishments, setAllEstablishments] = useState([]); // Для списка
+  const [selectedEstablishment, setSelectedEstablishment] = useState(''); // Для <select>
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const { promoId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const returnPath = location.state?.from || '/admin/dashboard';
 
   useEffect(() => {
-    const fetchPromo = async () => {
+    const fetchPageData = async () => {
       try {
-        const response = await apiClient.get(`/api/moderation-promo/${promoId}/`);
-        setPromo(response.data);
-        setEditedText(response.data.edited_text || response.data.raw_text);
-        setConditions(response.data.conditions || '');
+        // Загружаем и акцию, и список заведений ОДНОВРЕМЕННО
+        const [promoRes, establishmentsRes] = await Promise.all([
+          apiClient.get(`/api/moderation-promo/${promoId}/`),
+          apiClient.get('/api/admin/establishments/') // <-- Загружаем все заведения
+        ]);
+        
+        // Устанавливаем данные акции (как и было)
+        setPromo(promoRes.data);
+        setEditedText(promoRes.data.edited_text || promoRes.data.raw_text);
+        setConditions(promoRes.data.conditions || '');
+        
+        // Устанавливаем список заведений
+        setAllEstablishments(establishmentsRes.data);
+        
+        // Устанавливаем ВЫБРАННОЕ по умолчанию заведение в <select>
+        setSelectedEstablishment(promoRes.data.establishment.id);
+
       } catch (err) {
-        setError('Не удалось загрузить данные акции.');
+        setError('Не удалось загрузить данные акции или список заведений.');
       } finally {
         setLoading(false);
       }
     };
-    fetchPromo();
+    fetchPageData();
   }, [promoId]);
 
   const handlePublish = async (event) => {
@@ -36,18 +55,20 @@ function AdminPromoEditPage() {
       console.log('Отправляем данные для публикации:', {
         edited_text: editedText,
         conditions: conditions,
-        status: 'published'
+        status: 'published',
+        establishment: selectedEstablishment
       });
       
       const response = await apiClient.put(`/api/moderation-promo/${promoId}/`, {
         edited_text: editedText,
         conditions: conditions,
         status: 'published',
+        establishment: selectedEstablishment
       });
       
       console.log('Ответ сервера:', response.data);
       alert('Акция успешно опубликована!');
-      navigate('/admin/moderation');
+      navigate(returnPath);
     } catch (err) {
       console.error('Ошибка при публикации:', err);
       setError('Не удалось опубликовать акцию: ' + (err.response?.data?.detail || err.message));
@@ -65,7 +86,7 @@ function AdminPromoEditPage() {
             
             console.log('Ответ сервера при удалении:', response.data);
             alert('Акция удалена!');
-            navigate('/admin/moderation');
+            navigate(returnPath);
         } catch (err) {
             console.error('Ошибка при удалении:', err);
             setError('Не удалось удалить акцию: ' + (err.response?.data?.detail || err.message));
@@ -79,7 +100,10 @@ function AdminPromoEditPage() {
 
   return (
     <div className="admin-page">
-      <h1>Редактирование акции от "{promo.establishment.name}"</h1>
+      <h1>
+        Редактирование акции от "
+        {allEstablishments.find(e => e.id == selectedEstablishment)?.name || promo.establishment.name}"
+      </h1>
       <form onSubmit={handlePublish}>
         <h2>Медиафайлы</h2>
         <div className="promo-media-container">
@@ -116,12 +140,30 @@ function AdminPromoEditPage() {
               onChange={e => setConditions(e.target.value)}
             />
           </div>
+          <div className="form-row">
+            <label htmlFor="establishment">Заведение (отвечает за категорию):</label>
+            <select
+              id="establishment"
+              value={selectedEstablishment}
+              onChange={e => setSelectedEstablishment(e.target.value)}
+              required
+            >
+              <option value="">-- Выберите заведение --</option>
+              {allEstablishments.map(est => (
+                <option key={est.id} value={est.id}>
+                  {/* Мы берем subcategory_name из /api/admin/establishments/ */}
+                  {est.name} ({est.subcategory_name})
+                </option>
+              ))}
+            </select>
+          </div>
         </fieldset>
         
         <div className="submit-row">
           <button type="submit" className="default">Опубликовать</button>
           <button type="button" className="deletelink" onClick={handleDelete}>Удалить</button>
         </div>
+
       </form>
       <br />
       <Link to="/admin/moderation"> &larr; Назад к списку</Link>
