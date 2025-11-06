@@ -1,0 +1,31 @@
+/* src/components/SubcategoryFilter.css */
+.subcategory-filter-container {
+  display: flex;
+  flex-wrap: wrap; /* Позволяет "таблеткам" переноситься на новую строку */
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.filter-pill {
+  padding: 8px 18px;
+  border: 1px solid var(--border-color);
+  background-color: var(--card-background);
+  border-radius: 20px; /* Делаем их "таблетками" */
+  cursor: pointer;
+  font-size: 0.95em;
+  font-weight: 500;
+  color: var(--text-color-primary);
+  transition: all 0.2s ease;
+}
+
+.filter-pill:hover {
+  border-color: #aaa;
+  background-color: #f9f9f9;
+}
+
+.filter-pill.selected {
+  /* Стиль для активной "таблетки" */
+  background-color: var(--accent-color);
+  color: white;
+  border-color: var(--accent-color);
+}

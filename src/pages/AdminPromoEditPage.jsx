@@ -4,7 +4,7 @@ import apiClient from '../api';
 import '../App.css';
 
 const API_BASE_URL = 'https://ig-parser-backend.onrender.com';
-
+//const API_BASE_URL = 'http://127.0.0.1:8000';
 function AdminPromoEditPage() {
   const [promo, setPromo] = useState(null);
   const [editedText, setEditedText] = useState('');
