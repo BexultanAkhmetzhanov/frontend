@@ -244,7 +244,7 @@ function HomePage() {
         {selectedCity && loadingPromotions && <p>Загрузка акций...</p>}
         
         {selectedCity && !loadingPromotions && (
-          <div className="promotions-list">
+          <div className={`promotions-list ${filteredPromotions.length === 1 ? 'single-item' : ''}`}>
             
             {/* ✅ ИСПОЛЬЗУЕМ filteredPromotions */}
             {filteredPromotions.length === 0 ? (

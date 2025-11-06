@@ -32,8 +32,7 @@
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   display: flex;
   flex-direction: column;
-  max-width: 450px; /* Максимальная ширина, чтобы не растягиваться до 1200px */
-  margin: 0 auto;
+  
 }
 
 .promotion-card:hover {
@@ -71,7 +70,16 @@
   color: #999;
   margin-top: 15px;
 }
+.promotions-list.single-item {
+  /* Мы отменяем 3 колонки и делаем ОДНУ */
+  grid-template-columns: 1fr;
+}
 
+/* И только в этом случае мы центрируем карточку */
+.promotions-list.single-item .promotion-card {
+  max-width: 450px;
+  margin: 0 auto;
+}
 /* --- АДМИН-ПАНЕЛЬ --- */
 
 /* Общий контейнер для страниц админки */
