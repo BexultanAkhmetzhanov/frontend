@@ -21,8 +21,7 @@
   display: grid;
   /* Карточки будут иметь минимальную ширину 320px и занимать всё доступное место */
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 30px; /* Расстояние между карточками */
-  justify-content: center;
+  gap: 30px;
 }
 
 .promotion-card {
