@@ -10,6 +10,7 @@ import AdminPromoEditPage from './pages/AdminPromoEditPage';
 import AdminParsingPage from './pages/AdminParsingPage';
 import AdminSettingsPage from './pages/AdminSettingsPage'; // <-- Импорт новой страницы
 import AdminPublishedPage from './pages/AdminPublishedPage';
+import AdminCreatePromoPage from './pages/AdminCreatePromoPage';
 
 function App() {
   return (
@@ -23,6 +24,10 @@ function App() {
         <Route 
           path="/admin/dashboard" 
           element={ <ProtectedRoute><AdminDashboard /></ProtectedRoute> } 
+        />
+        <Route 
+          path="/admin/create" 
+          element={ <ProtectedRoute><AdminCreatePromoPage /></ProtectedRoute> } 
         />
         <Route 
           path="/admin/moderation" 

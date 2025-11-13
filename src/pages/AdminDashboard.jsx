@@ -18,6 +18,9 @@ function AdminDashboard() {
       <nav className="admin-nav">
         <ul>
           <li>
+            <Link to="/admin/create">Создать акцию вручную</Link>
+          </li>
+          <li>
             <Link to="/admin/moderation">Модерация акций</Link>
           </li>
           <li>
